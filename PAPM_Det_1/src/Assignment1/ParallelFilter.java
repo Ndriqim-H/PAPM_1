@@ -38,13 +38,22 @@ public class ParallelFilter {
 
         @Override
         protected void compute() {
-    			if(size < sThreshold) {
+    			if(size < sThreshold || numThreads == 1) {
     				computeDirectly();
     				return;
     			}
     			
-    			int split = size / numThreads;
-    			int remainder = size % numThreads;
+    			int split, remainder;
+    			
+    			if(numThreads != 1) {
+    				split = size / numThreads;
+    				remainder = size % numThreads;
+    			}
+    			else {
+    				split = size / 2;
+        			remainder = size % 2;
+    			}
+    			
 
     			List<ImageBlurTask> tasks = new ArrayList<>();
 
